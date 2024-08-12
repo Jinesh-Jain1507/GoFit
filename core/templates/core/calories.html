@@ -1,0 +1,197 @@
+{% extends "core/base.html" %}
+{% load static %} {% load mathfilters %} 
+{% block title %}Check Calories and Nutrition{% endblock title %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <img src="{% static 'img/caloriecount.png' %}" class="img-responsive logo mb-5 mt-5" />
+            <div class="search-bar">
+                <form class="search-form d-flex align-items-center" method="POST">
+                    {% csrf_token %}
+                  <input type="text" name="query" placeholder="Search food item" title="Enter a food item">
+                  <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                </form>
+              </div>
+        {% if api %}
+        {% if api == "oops! There was an error" %}
+        <div class ="alert alert-warning"> Oh no! something went wrong.Please try again in sometime. </div>
+        {% else %}
+        <h1 class="my-4">{{api.0.name | capfirst}} has a total of <strong> {{api.0.calories}} Calories</strong>
+            {% if api.0.calories > 200 %}
+                <img src='{% static "img/shocked.png" %}' class="img-responsive" />
+            {% endif %}
+        </h1>
+        {% if api.0.sodium_mg > 400 %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-octagon me-1"></i>
+            This food contains a high amount of sodium. High Sodium causes Severe dehydration and water retention.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endif %}
+        {% if api.0.sugar_g > 22.5 %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-octagon me-1"></i>
+                This food contains a high amount of sugar. Sugar causes insulin spikes and is a no.1 cause for Obesity.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endif %}
+    </div>
+    <div class="col-md-10 caloriescont shadow rounded">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="card-title mt-3 mb-4">Nutritional Values</h5>
+                <span></span>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center mt-2">
+                        Serving Size per 100/Grams
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Carbohydrates
+                        <span class="badge bg-primary rounded-pill float-end">{{ api.0.carbohydrates_total_g }} g</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Cholesterol
+                        <span class="badge bg-primary rounded-pill float-end">{{ api.0.cholesterol_mg }} mg</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Saturated fat
+                        <span class="badge bg-primary rounded-pill float-end">{{ api.0.fat_saturated_g }} g</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Total Fat
+                        <span class="badge bg-primary rounded-pill float-end">{{ api.0.fat_total_g }} g</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Fiber Content
+                        <span class="badge bg-primary rounded-pill float-end">{{ api.0.fiber_g }} g</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Potassium
+                        <span class="badge bg-primary rounded-pill float-end">{{ api.0.potassium_mg }} mg</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Protein
+                        <span class="badge bg-primary rounded-pill float-end">{{ api.0.protein_g }} g</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Sodium
+                        <span class="badge bg-primary rounded-pill float-end">{{ api.0.sodium_mg }} mg</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Sugar
+                        <span class="badge bg-primary rounded-pill float-end">{{ api.0.sugar_g }} g</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6 mb-5">
+                <h5 class="card-title mt-3 mb-4">To burn {{api.0.calories}} calories you will have to</h5>
+                <div class="card mb-3">
+                    <div class="row g-0">
+                      <div class="col-md-4 d-flex justify-content-center align-items-center">
+                        <img src="{% static "img/running.png" %}" class="img-fluid rounded-start align-item-c" alt="...">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="left-card-title">Jog</h5>
+                          <p class="card-text">you will have to jog for <strong> {{api.0.calories | div:378|mul:60|floatformat:0}} </strong> Minutes</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card mb-3">
+                    <div class="row g-0">
+                      <div class="col-md-4 d-flex justify-content-center align-items-center">
+                        <img src="{% static "img/yoga.png" %}" class="img-fluid rounded-start" alt="...">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="left-card-title">Power Yoga</h5>
+                          <p class="card-text">you will have to Power Yoga for <strong> {{api.0.calories | div:223|mul:60|floatformat:0}} </strong> Minutes</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card mb-3">
+                    <div class="row g-0">
+                      <div class="col-md-4 d-flex justify-content-center align-items-center">
+                        <img src="{% static "img/weightlifter.png" %}" class="img-fluid rounded-start" alt="...">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="left-card-title">Gym</h5>
+                          <p class="card-text">you will have to lift weight for <strong> {{api.0.calories | div:483|mul:60|floatformat:0}} </strong> Minutes </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card mb-3">
+                    <div class="row g-0">
+                      <div class="col-md-4 d-flex justify-content-center align-items-center">
+                        <img src="{% static "img/walking.png" %}" class="img-fluid rounded-start" alt="...">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="left-card-title">Walking</h5>
+                          <p class="card-text">you will have to brisk walk for <strong> {{api.0.calories | div:294|mul:60|floatformat:0}}  </strong> Minutes</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  <canvas id="barChart" style="max-height: 600px;"></canvas>
+              </div>
+              {%endif%}
+              {%endif%}
+          </div>
+            <script>
+              document.addEventListener("DOMContentLoaded", () => {
+                new Chart(document.querySelector('#barChart'), {
+                  type: 'bar',
+                  data: {
+                    labels: ['carbohydrates', 'Cholesterol', 'Saturated fat', 'Total Fat', 'Fiber Content', 'Potassium', 'Protein','Sodium','Sugar'],
+                    datasets: [{
+                      label: 'Nutrition Chart',
+                      data: [
+                              {{api.0.carbohydrates_total_g}},
+                              {{api.0.cholesterol_mg | div:1000}},
+                              {{api.0.fat_saturated_g}},
+                              {{api.0.fat_total_g}},
+                              {{api.0.fiber_g}},
+                              {{api.0.potassium_mg | div:1000}},
+                              {{api.0.protein_g}},
+                              {{api.0.sodium_mg | div:1000}},
+                              {{api.0.sugar_g}},
+                        ],
+                      backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(201, 203, 207, 0.2)'
+                      ],
+                      borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(54, 162, 235)',
+                        'rgb(153, 102, 255)',
+                        'rgb(201, 203, 207)'
+                      ],
+                      borderWidth: 1
+                    }]
+                  },
+                  options: {
+                    scales: {
+                      y: {
+                        beginAtZero: true
+                      }
+                    }
+                  }
+                });
+              });
+            </script>
+
+{% endblock content %}

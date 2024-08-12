@@ -1,0 +1,103 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Your Workouts{% endblock title %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-8">
+            {% for workout in workouts %}
+            {% if forloop.counter0|divisibleby:2 %}
+            <div class="row">
+            {% endif %}
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{% for keys, values in exercise_choices.items %}
+                                {% if keys == workout.exercise %}
+                                    {{values.1}}
+                                {% endif %}
+                                {% endfor %}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{% for keys, values in exercise_choices.items %}
+                                {% if keys == workout.exercise %}
+                                    {{values.0}}
+                                {% endif %}
+                                {% endfor %} Workout</h6>
+                            <p class="card-text">
+                                <ul>
+                                    <li>Weight: {{workout.weight}} kg</li>
+                                    <li>Sets: {{workout.sets}}</li>
+                                    <li>Reps: {{workout.reps}}</li>
+                                </ul>
+                            </p>
+                            <form action="{% url "delete" workout.id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                    <input type="submit" class="btn btn-danger btn-sm" value="Delete">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% if forloop.last or forloop.counter0|add:"1"|divisibleby:2 %} {# Close the row for the last iteration or odd iteration #}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="col-sm-4 text-center">
+            <div class="container-fluid h-100">
+                <div class="row h-100">
+                    <div class="col">
+                        <div id='calendar' class="h-100" style="width: 100%; height: 100vh;"></div>
+                    </div>
+                </div>
+            </div>
+    
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.js'></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#calendar').fullCalendar({
+                selectable: true,
+                validRange: function(nowDate) {
+                    var startOfTomorrow = moment().startOf('day').add(1, 'day');
+                    return { end: startOfTomorrow };
+                },
+                select: function(start, end) {
+                    window.location.href = '/workouts/' + start.format('YYYY-MM-DD')
+                }
+            });
+        });
+    </script>
+        {% if add %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
+                Add Exercise
+              </button>
+              <div class="modal fade" id="verticalycentered" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Add Exercise</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="row g-3" method="POST">
+                            {% csrf_token %}
+                            {% for field in eform %}
+                            <div class="col-md-12">
+                              <div class="form-floating">
+                                {{ field }} 
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                              </div>
+                            </div>
+                            {% endfor %}
+                    <div class="modal-footer text-center">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

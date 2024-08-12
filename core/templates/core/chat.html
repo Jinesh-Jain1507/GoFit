@@ -1,0 +1,32 @@
+{% extends "core/base.html" %}
+{% block title %}Ask AI{% endblock title %}
+{% block content %}
+
+{% if response %}
+<div class="card bg-beige col-sm-10 float-end">
+    <div class="card-body">
+      <h5 class="card-title">{{full_name}}</h5>
+      {{prompt}}
+    </div>
+  </div>
+
+  <div class="card bg-light-green col-sm-10">
+    <div class="card-body">
+      <h5 class="card-title">AI Fitness Coach</h5>
+      {{response}}
+    </div>
+  </div>
+{% endif %}
+
+<form class="row g-3 needs-validation" novalidate method="post">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="col-12">
+            {{ field }} <small class="text-warning">{{ field.errors|striptags }}</small>
+        </div>
+    {% endfor %}
+    <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Ask</button>
+    </div>
+</form>
+{% endblock content %}

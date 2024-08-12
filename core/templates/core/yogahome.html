@@ -1,0 +1,69 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block content %}
+      <!-- Slides with captions -->
+      <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="{% static "img/yoga-1.jpg" %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Bhagwad Gita</h5>
+              <p>“Yoga is the journey of the self, through the self, to the self.”</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="{% static "img/yoga-2.jpg" %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Swami Vivekananda</h5>
+              <p>“There is a continuity of mind, as the Yogis call it. The mind is universal. Your mind, my mind, all these little minds, are fragments of that universal mind, little waves in the ocean”</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="{% static "img/yoga-3.jpg" %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Maharishi Patanjali</h5>
+              <p>“Yoga is the cessation of the movements of the mind. Then there is abiding in the Seer’s own form.”</p>
+            </div>
+          </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+
+      </div><!-- End Slides with captions -->
+
+      <hr class="my-5">
+      
+      <div class="pagetitle d-flex justify-content-center my-5">
+        <h1>Check out some Yoga Asanas</h1>
+      </div>
+      
+      {% if poses %}
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+        {% for pose in poses %}
+            <div class="col mb-4">
+                <div class="card">
+                    <img src="{{ pose.url_png }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <a href="{% url "yogaasana" pose.id %}"><h5 class="card-title">{{ pose.sanskrit_name }}</h5></a>
+                        <p class="card-text">{{ pose.pose_description|truncatechars:40 }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+      {% else %}
+        <h1>Server Down</h1>
+      {% endif %}
+{% endblock content %}
