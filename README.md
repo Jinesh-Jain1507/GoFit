@@ -54,8 +54,7 @@ GoFit is a web application designed to help users track and manage their fitness
    python manage.py createsuperuser
 
 8. Create a .env file similar to the .env.sample file.
-
-9.Get your API key from [OpenAI](https://platform.openai.com/) and another from [API Ninjas](https://api-ninjas.com/api) add it to the .env file
+9. Get your API key from [OpenAI](https://platform.openai.com/) and another from [API Ninjas](https://api-ninjas.com/api) add it to the .env file
 
 10. Start the development server:
    ```bash
